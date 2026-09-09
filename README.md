@@ -35,9 +35,9 @@ Math remains pre-rendered. Gradient descent includes build-time MathJax SVG and 
 
 ## GitHub Pages
 
-A deployment workflow is included in `.github/workflows/pages.yml`. This site assumes it is served at the root of an origin: use a personal `<username>.github.io` repository or a custom domain. Project subpaths require a separate base-path adaptation.
+A deployment workflow is included in `.github/workflows/pages.yml`. It works whether the site is served at the root of an origin (a personal `<username>.github.io` repository, or a custom domain) or at a project subpath (`<username>.github.io/<repo>`). The workflow passes GitHub Pages' configured `base_url` and `base_path` into the build as `SITE_URL` and `BASE_PATH`; `astro.config.mjs` reads `BASE_PATH` into its `base` option, and internal links/assets go through the `withBase()` helper in `src/base.js` so they resolve correctly under either scheme.
 
-Copy this project to the intended GitHub repository, enable GitHub Pages with GitHub Actions as the source, and configure the final domain before launch. The workflow uses Pages' configured URL for the build. No GitHub account or public domain has been configured by this build.
+Copy this project to the intended GitHub repository and enable GitHub Pages with GitHub Actions as the source. No further configuration is required for a project subpath deploy; add a custom domain later via a `public/CNAME` file if desired.
 
 ## Content decisions
 

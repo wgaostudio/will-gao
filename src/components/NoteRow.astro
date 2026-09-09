@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../base.js';
 const { note } = Astro.props;
 ---
-<article class="note-row"><div class="meta"><span>{note.date}</span></div><div><h3><a href={`/notes/${note.slug}/`}>{note.title}</a></h3><p>{note.summary}</p></div></article>
+<article class="note-row"><div class="meta"><span>{note.date}</span></div><div><h3><a href={withBase(`/notes/${note.slug}/`)}>{note.title}</a></h3><p>{note.summary}</p></div></article>
