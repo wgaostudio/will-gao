@@ -1,0 +1,5 @@
+---
+import { existsSync } from 'node:fs';
+const available=existsSync(new URL('../../public/cv.pdf',import.meta.url));
+---
+{available ? <a href="/cv.pdf">CV (PDF)</a> : <span class="resource-pending">CV (PDF) <span>— coming soon</span></span>}

@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import { mathjax } from 'mathjax-full/js/mathjax.js';
+import { TeX } from 'mathjax-full/js/input/tex.js';
+import { SVG } from 'mathjax-full/js/output/svg.js';
+import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor.js';
+import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html.js';
+import { AssistiveMmlHandler } from 'mathjax-full/js/a11y/assistive-mml.js';
+import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages.js';
+const adaptor=liteAdaptor();AssistiveMmlHandler(RegisterHTMLHandler(adaptor));
+const tex=new TeX({packages:AllPackages,inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['\\[','\\]']],macros:{R:'\\mathbb{R}',E:'\\mathbb{E}',norm:['\\left\\lVert #1 \\right\\rVert',1],argmin:'\\operatorname*{arg\\,min}',tr:'^{\\top}'}});
+const svg=new SVG({fontCache:'local'});
+const path=new URL('../src/content/gradient-descent.html',import.meta.url);
+const doc=mathjax.document(fs.readFileSync(path,'utf8'),{InputJax:tex,OutputJax:svg});doc.render();
+fs.writeFileSync(path,adaptor.innerHTML(adaptor.body(doc.document)));
+console.log('Rendered gradient-descent mathematics with embedded MathML.');

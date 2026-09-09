@@ -1,0 +1,3272 @@
+
+<div class="page">
+
+<header class="titleblock">
+  
+  
+  
+</header>
+
+<section class="abstract">
+  <p>These notes develop <math alttext="k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math>-means and spectral clustering from an optimization viewpoint. After proving the descent and finite termination of Lloyd's algorithm, we formulate a balanced graph-partitioning problem, derive its spectral relaxation, and show how the resulting Fiedler vector is related to the eigenmodes of a random walk on a similarity graph.</p>
+</section>
+
+<p class="provenance">These notes grew out of Prof. Alexis Drouot's MATH 480 course at the University of Washington, Seattle (Winter 2025). I have reorganized and expanded my course notes and have done my best to ensure correctness, but errors may remain.</p>
+
+
+
+<!-- ================= Section 1 ================= -->
+
+<h2 class="section" id="S1"><span class="secnum">1</span>K-means clustering</h2>
+
+<p>Let <math alttext="x_1,\dots,x_N \in \R^d" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>x</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>x</mi>
+    <mi>N</mi>
+  </msub>
+  <mo>&#x2208;</mo>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="double-struck">R</mi>
+    </mrow>
+    <mi>d</mi>
+  </msup>
+</math> be the data and let <math alttext="1 \le k \le N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mo>&#x2264;</mo>
+  <mi>k</mi>
+  <mo>&#x2264;</mo>
+  <mi>N</mi>
+</math> be the desired number of clusters. K-means seeks centers <math alttext="C = (C_1,\dots,C_k) \in (\R^d)^k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>C</mi>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>C</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>C</mi>
+    <mi>k</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2208;</mo>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="double-struck">R</mi>
+    </mrow>
+    <mi>d</mi>
+  </msup>
+  <msup>
+    <mo stretchy="false">)</mo>
+    <mi>k</mi>
+  </msup>
+</math> around which the data cluster.</p>
+
+<h3 class="subsection" id="S1.1"><span class="secnum">1.1</span>Lloyd's algorithm</h3>
+
+<p>Fix a deterministic rule for breaking ties between equally close centers. Choose initial centers <math alttext="C^0 = (C^0_1,\dots,C^0_k)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>C</mi>
+    <mn>0</mn>
+  </msup>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <msubsup>
+    <mi>C</mi>
+    <mn>1</mn>
+    <mn>0</mn>
+  </msubsup>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msubsup>
+    <mi>C</mi>
+    <mi>k</mi>
+    <mn>0</mn>
+  </msubsup>
+  <mo stretchy="false">)</mo>
+</math>, often as <math alttext="k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math> distinct points sampled from <math alttext="x_1,\dots,x_N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>x</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>x</mi>
+    <mi>N</mi>
+  </msub>
+</math>.</p>
+
+<p>For <math alttext="m = 0,1,2,\dots" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+  <mo>,</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mn>2</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+</math>, repeat the following steps.</p>
+
+<ol class="steps">
+  <li>Given <math alttext="C^m" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+</math>, assign every data point to a nearest center. If <math alttext="a_m(j) \in \{1,\dots,k\}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>a</mi>
+    <mi>m</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>j</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2208;</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mi>k</mi>
+  <mo fence="false" stretchy="false">}</mo>
+</math> is the assigned label of <math alttext="x_j" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>x</mi>
+    <mi>j</mi>
+  </msub>
+</math>, then
+  <div class="eqn"><math alttext="a_m(j) \in \argmin_{1 \le \ell \le k} \norm{x_j - C^m_\ell}." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>a</mi>
+    <mi>m</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>j</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2208;</mo>
+  <munder>
+    <mrow data-mjx-texclass="OP">
+      <mi>arg</mi>
+      <mstyle scriptlevel="0">
+        <mspace width="0.167em"></mspace>
+      </mstyle>
+      <mi>min</mi>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mn>1</mn>
+      <mo>&#x2264;</mo>
+      <mi>&#x2113;</mi>
+      <mo>&#x2264;</mo>
+      <mi>k</mi>
+    </mrow>
+  </munder>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+    <msub>
+      <mi>x</mi>
+      <mi>j</mi>
+    </msub>
+    <mo>&#x2212;</mo>
+    <msubsup>
+      <mi>C</mi>
+      <mi>&#x2113;</mi>
+      <mi>m</mi>
+    </msubsup>
+    <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+  </mrow>
+  <mo>.</mo>
+</math></div>
+  Define the corresponding sets of indices by <math alttext="I^m_\ell = \{\, j \in \{1,\dots,N\} : a_m(j) = \ell \,\}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msubsup>
+    <mi>I</mi>
+    <mi>&#x2113;</mi>
+    <mi>m</mi>
+  </msubsup>
+  <mo>=</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>j</mi>
+  <mo>&#x2208;</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mi>N</mi>
+  <mo fence="false" stretchy="false">}</mo>
+  <mo>:</mo>
+  <msub>
+    <mi>a</mi>
+    <mi>m</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>j</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>&#x2113;</mi>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mo fence="false" stretchy="false">}</mo>
+</math>. Thus <math alttext="\{1,\dots,N\} = \bigsqcup_{\ell=1}^{k} I^m_\ell" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo fence="false" stretchy="false">{</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mi>N</mi>
+  <mo fence="false" stretchy="false">}</mo>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2A06;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>&#x2113;</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>k</mi>
+    </mrow>
+  </munderover>
+  <msubsup>
+    <mi>I</mi>
+    <mi>&#x2113;</mi>
+    <mi>m</mi>
+  </msubsup>
+</math>.</li>
+
+  <li>Assuming each <math alttext="I^m_\ell" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msubsup>
+    <mi>I</mi>
+    <mi>&#x2113;</mi>
+    <mi>m</mi>
+  </msubsup>
+</math> is nonempty, replace each center by the mean of its assigned observations:
+  <div class="eqn"><math alttext="C^{m+1}_\ell = \frac{1}{\abs{I^m_\ell}} \sum_{j \in I^m_\ell} x_j, \qquad \ell = 1,\dots,k." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msubsup>
+    <mi>C</mi>
+    <mi>&#x2113;</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msubsup>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN">|</mo>
+      <msubsup>
+        <mi>I</mi>
+        <mi>&#x2113;</mi>
+        <mi>m</mi>
+      </msubsup>
+      <mo data-mjx-texclass="CLOSE">|</mo>
+    </mrow>
+  </mfrac>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>&#x2208;</mo>
+      <msubsup>
+        <mi>I</mi>
+        <mi>&#x2113;</mi>
+        <mi>m</mi>
+      </msubsup>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>x</mi>
+    <mi>j</mi>
+  </msub>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mi>&#x2113;</mi>
+  <mo>=</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mi>k</mi>
+  <mo>.</mo>
+</math></div></li>
+
+  <li>Stop if <math alttext="C^{m+1} = C^m" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo>=</mo>
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+</math>; otherwise continue.</li>
+</ol>
+
+<p>The displayed update requires every <math alttext="I^m_\ell" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msubsup>
+    <mi>I</mi>
+    <mi>&#x2113;</mi>
+    <mi>m</mi>
+  </msubsup>
+</math> to be nonempty. In an implementation, empty clusters need an explicit rule, such as retaining the old center or reinitializing it in a way that does not increase the objective. For the theoretical discussion below, we assume that all clusters remain nonempty.</p>
+
+<h3 class="subsection" id="S1.2"><span class="secnum">1.2</span>Objective and descent</h3>
+
+<p>Define the <math alttext="k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math>-means objective</p>
+<div class="eqn"><math alttext="E(C) = \sum_{j=1}^{N} \min_{1 \le \ell \le k} \norm{x_j - C_\ell}^2 ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <mi>C</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">min</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mn>1</mn>
+      <mo>&#x2264;</mo>
+      <mi>&#x2113;</mi>
+      <mo>&#x2264;</mo>
+      <mi>k</mi>
+    </mrow>
+  </munder>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>x</mi>
+        <mi>j</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <msub>
+        <mi>C</mi>
+        <mi>&#x2113;</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>.</mo>
+</math></div>
+
+<p class="noindent">It is often convenient to introduce an assignment <math alttext="a : \{1,\dots,N\} \to \{1,\dots,k\}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mo>:</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mi>N</mi>
+  <mo fence="false" stretchy="false">}</mo>
+  <mo accent="false" stretchy="false">&#x2192;</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mi>k</mi>
+  <mo fence="false" stretchy="false">}</mo>
+</math> and the joint objective</p>
+<div class="eqn"><math alttext="Q(C,a) = \sum_{j=1}^{N} \norm{x_j - C_{a(j)}}^2 ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>Q</mi>
+  <mo stretchy="false">(</mo>
+  <mi>C</mi>
+  <mo>,</mo>
+  <mi>a</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>x</mi>
+        <mi>j</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <msub>
+        <mi>C</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mi>a</mi>
+          <mo stretchy="false">(</mo>
+          <mi>j</mi>
+          <mo stretchy="false">)</mo>
+        </mrow>
+      </msub>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>.</mo>
+</math></div>
+
+<p class="noindent">For fixed <math alttext="C" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>C</mi>
+</math>, a nearest-center assignment minimizes <math alttext="Q(C,a)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>Q</mi>
+  <mo stretchy="false">(</mo>
+  <mi>C</mi>
+  <mo>,</mo>
+  <mi>a</mi>
+  <mo stretchy="false">)</mo>
+</math> over <math alttext="a" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math>; for fixed <math alttext="a" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math>, the cluster means minimize <math alttext="Q(C,a)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>Q</mi>
+  <mo stretchy="false">(</mo>
+  <mi>C</mi>
+  <mo>,</mo>
+  <mi>a</mi>
+  <mo stretchy="false">)</mo>
+</math> over <math alttext="C" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>C</mi>
+</math>.</p>
+
+<div class="thm italic statement" id="L1.1">
+  <p><span class="head">Lemma 1.1 <span class="name">(The sample mean minimizes squared distance).</span></span>
+  <span class="body">Let <math alttext="z_1,\dots,z_n \in \R^d" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>z</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>z</mi>
+    <mi>n</mi>
+  </msub>
+  <mo>&#x2208;</mo>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="double-struck">R</mi>
+    </mrow>
+    <mi>d</mi>
+  </msup>
+</math> and <math alttext="\bar z = n^{-1}\sum_{j=1}^{n} z_j" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>z</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>=</mo>
+  <msup>
+    <mi>n</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>z</mi>
+    <mi>j</mi>
+  </msub>
+</math>. Then <math alttext="\bar z" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>z</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+</math> is the unique solution of
+  <div class="eqn"><math alttext="\min_{c \in \R^d} \sum_{j=1}^{n} \norm{z_j - c}^2 ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">min</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>c</mi>
+      <mo>&#x2208;</mo>
+      <msup>
+        <mrow data-mjx-texclass="ORD">
+          <mi mathvariant="double-struck">R</mi>
+        </mrow>
+        <mi>d</mi>
+      </msup>
+    </mrow>
+  </munder>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+    </mrow>
+  </munderover>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>j</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <mi>c</mi>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>.</mo>
+</math></div></span></p>
+</div>
+
+<div class="proof proof-block">
+  <p><span class="head">Proof.</span> Let <math alttext="f(c) = \sum_{j=1}^{n}\norm{z_j - c}^2" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mo stretchy="false">(</mo>
+  <mi>c</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+    </mrow>
+  </munderover>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>j</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <mi>c</mi>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+</math>. Expanding gives
+  <div class="eqn"><math alttext="f(c) = n\norm{c}^2 - 2c\T \sum_{j=1}^{n} z_j + \sum_{j=1}^{n}\norm{z_j}^2 = n\norm{c - \bar z}^2 + \sum_{j=1}^{n}\norm{z_j}^2 - n\norm{\bar z}^2 ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>f</mi>
+  <mo stretchy="false">(</mo>
+  <mi>c</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>n</mi>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <mi>c</mi>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>&#x2212;</mo>
+  <mn>2</mn>
+  <msup>
+    <mi>c</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>z</mi>
+    <mi>j</mi>
+  </msub>
+  <mo>+</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+    </mrow>
+  </munderover>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>j</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>=</mo>
+  <mi>n</mi>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <mi>c</mi>
+      <mo>&#x2212;</mo>
+      <mrow data-mjx-texclass="ORD">
+        <mover>
+          <mi>z</mi>
+          <mo stretchy="false">&#xAF;</mo>
+        </mover>
+      </mrow>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>+</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+    </mrow>
+  </munderover>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>j</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>&#x2212;</mo>
+  <mi>n</mi>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <mrow data-mjx-texclass="ORD">
+        <mover>
+          <mi>z</mi>
+          <mo stretchy="false">&#xAF;</mo>
+        </mover>
+      </mrow>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>.</mo>
+</math></div>
+  The final two terms do not depend on <math alttext="c" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>c</mi>
+</math>, and the first is nonnegative with equality exactly when <math alttext="c = \bar z" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>c</mi>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>z</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+</math>. <span class="qed"><math alttext="\square" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x25FB;</mi>
+</math></span></p>
+</div>
+
+<div class="thm italic statement" id="T1.2">
+  <p><span class="head">Theorem 1.2 <span class="name">(Monotonicity and finite termination).</span></span>
+  <span class="body">Assume that ties are broken deterministically and all clusters remain nonempty. The iterates of Lloyd's algorithm satisfy
+  <div class="eqn"><math alttext="E(C^0) \ge E(C^1) \ge E(C^2) \ge \cdots ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mn>0</mn>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2265;</mo>
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mn>1</mn>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2265;</mo>
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mn>2</mn>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2265;</mo>
+  <mo>&#x22EF;</mo>
+  <mo>.</mo>
+</math></div>
+  Moreover, equality <math alttext="E(C^{m+1}) = E(C^m)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+  <mo stretchy="false">)</mo>
+</math> forces <math alttext="C^{m+1} = C^m" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo>=</mo>
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+</math>. Consequently the algorithm reaches a fixed point after finitely many iterations.</span></p>
+</div>
+
+<div class="proof proof-block">
+  <p><span class="head">Proof.</span> Let <math alttext="a_m" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>a</mi>
+    <mi>m</mi>
+  </msub>
+</math> denote the nearest-center assignment associated with <math alttext="C^m" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+</math>. The sample-mean lemma, applied separately to every nonempty cluster, gives
+  <div class="eqn"><math alttext="E(C^m) = Q(C^m, a_m) \ge Q(C^{m+1}, a_m)." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>Q</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+  <mo>,</mo>
+  <msub>
+    <mi>a</mi>
+    <mi>m</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2265;</mo>
+  <mi>Q</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo>,</mo>
+  <msub>
+    <mi>a</mi>
+    <mi>m</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>.</mo>
+</math></div>
+  Reassigning each point to a nearest new center can only improve the joint objective, so
+  <div class="eqn"><math alttext="Q(C^{m+1}, a_m) \ge Q(C^{m+1}, a_{m+1}) = E(C^{m+1})." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>Q</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo>,</mo>
+  <msub>
+    <mi>a</mi>
+    <mi>m</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2265;</mo>
+  <mi>Q</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo>,</mo>
+  <msub>
+    <mi>a</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>.</mo>
+</math></div>
+  This proves monotonicity. If <math alttext="E(C^{m+1}) = E(C^m)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+  <mo stretchy="false">)</mo>
+</math>, then equality holds in the first inequality above. By uniqueness of the sample mean, every old center already equals the mean of its assigned cluster, and hence <math alttext="C^{m+1} = C^m" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>C</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>m</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo>=</mo>
+  <msup>
+    <mi>C</mi>
+    <mi>m</mi>
+  </msup>
+</math>.</p>
+
+  <p>There are only finitely many assignments, at most <math alttext="k^N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>k</mi>
+    <mi>N</mi>
+  </msup>
+</math>, and each assignment with nonempty clusters determines a unique tuple of cluster means. After the first update, every center tuple produced by the algorithm is therefore one of finitely many such tuples. Between two distinct center tuples the objective decreases strictly. Hence no nonfixed center tuple can repeat, and the algorithm must reach a fixed point after finitely many iterations. <span class="qed"><math alttext="\square" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x25FB;</mi>
+</math></span></p>
+</div>
+
+<div class="thm statement" id="R1.3">
+  <p><span class="head">Remark 1.3.</span> The fixed point need not be a global minimizer of <math alttext="E" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>E</mi>
+</math>. K-means is sensitive to initialization, so multiple restarts or <math alttext="k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math>-means++ initialization are often used in practice.</p>
+</div>
+
+<!-- ================= Section 2 ================= -->
+
+<h2 class="section" id="S2"><span class="secnum">2</span>Spectral clustering</h2>
+
+<p>K-means can perform poorly when clusters are nonconvex, as in the familiar “two moons” example. Spectral clustering instead encodes the data as a weighted graph: nearby, similar points receive a large edge weight and should preferably receive the same label.</p>
+
+<h3 class="subsection" id="S2.1"><span class="secnum">2.1</span>A balanced two-cluster problem</h3>
+
+<p>Suppose <math alttext="N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+</math> is even and we seek two clusters of equal size. Assign labels</p>
+<div class="eqn"><math alttext="z_i \in \{-1,1\}, \qquad \Omega_+ = \{x_i : z_i = 1\}, \qquad \Omega_- = \{x_i : z_i = -1\}." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2208;</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mn>1</mn>
+  <mo fence="false" stretchy="false">}</mo>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi mathvariant="normal">&#x3A9;</mi>
+    <mo>+</mo>
+  </msub>
+  <mo>=</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>:</mo>
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>1</mn>
+  <mo fence="false" stretchy="false">}</mo>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi mathvariant="normal">&#x3A9;</mi>
+    <mo>&#x2212;</mo>
+  </msub>
+  <mo>=</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>:</mo>
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+  <mo fence="false" stretchy="false">}</mo>
+  <mo>.</mo>
+</math></div>
+<p class="noindent">The balance condition is <math alttext="\sum_{i=1}^{N} z_i = 0" xmlns="http://www.w3.org/1998/Math/MathML">
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>0</mn>
+</math>.</p>
+
+<p>With an <math alttext="\varepsilon" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B5;</mi>
+</math>-neighborhood graph, a natural disagreement energy is</p>
+<div class="eqn"><math alttext="E(z) = \sum_{i,j=1}^{N} \one_{\{\norm{x_i - x_j} \le \varepsilon\}} \abs{z_i - z_j}^2 ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>E</mi>
+  <mo stretchy="false">(</mo>
+  <mi>z</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mrow data-mjx-texclass="ORD">
+      <mn mathvariant="bold">1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mo fence="false" stretchy="false">{</mo>
+      <mrow data-mjx-texclass="INNER">
+        <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+        <msub>
+          <mi>x</mi>
+          <mi>i</mi>
+        </msub>
+        <mo>&#x2212;</mo>
+        <msub>
+          <mi>x</mi>
+          <mi>j</mi>
+        </msub>
+        <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+      </mrow>
+      <mo>&#x2264;</mo>
+      <mi>&#x3B5;</mi>
+      <mo fence="false" stretchy="false">}</mo>
+    </mrow>
+  </msub>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN">|</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>i</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>j</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE">|</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>.</mo>
+</math></div>
+<p class="noindent">It penalizes nearby points given opposite labels. Because the sum runs over ordered pairs <math alttext="(i,j)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">(</mo>
+  <mi>i</mi>
+  <mo>,</mo>
+  <mi>j</mi>
+  <mo stretchy="false">)</mo>
+</math>, every undirected edge is counted twice.</p>
+
+<p>More generally, choose a nonnegative, nonincreasing similarity function <math alttext="w : [0,\infty) \to [0,\infty)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>w</mi>
+  <mo>:</mo>
+  <mo stretchy="false">[</mo>
+  <mn>0</mn>
+  <mo>,</mo>
+  <mi mathvariant="normal">&#x221E;</mi>
+  <mo stretchy="false">)</mo>
+  <mo accent="false" stretchy="false">&#x2192;</mo>
+  <mo stretchy="false">[</mo>
+  <mn>0</mn>
+  <mo>,</mo>
+  <mi mathvariant="normal">&#x221E;</mi>
+  <mo stretchy="false">)</mo>
+</math>, so that close points receive large weights. The indicator above corresponds to</p>
+<div class="eqn"><math alttext="w(r) = \begin{cases} 1, &amp; r \le \varepsilon,\\[2pt] 0, &amp; r \gt \varepsilon. \end{cases}" xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>w</mi>
+  <mo stretchy="false">(</mo>
+  <mi>r</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">{</mo>
+    <mtable columnalign="left left" columnspacing="1em" rowspacing="0.4em 0.2em">
+      <mtr>
+        <mtd>
+          <mn>1</mn>
+          <mo>,</mo>
+        </mtd>
+        <mtd>
+          <mi>r</mi>
+          <mo>&#x2264;</mo>
+          <mi>&#x3B5;</mi>
+          <mo>,</mo>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mn>0</mn>
+          <mo>,</mo>
+        </mtd>
+        <mtd>
+          <mi>r</mi>
+          <mo>&gt;</mo>
+          <mi>&#x3B5;</mi>
+          <mo>.</mo>
+        </mtd>
+      </mtr>
+    </mtable>
+    <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true"></mo>
+  </mrow>
+</math></div>
+
+<p>Relax <math alttext="z_i \in \{-1,1\}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2208;</mo>
+  <mo fence="false" stretchy="false">{</mo>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mn>1</mn>
+  <mo fence="false" stretchy="false">}</mo>
+</math> to <math alttext="z_i \in \R" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2208;</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="double-struck">R</mi>
+  </mrow>
+</math>. The constraint <math alttext="\sum_i z_i^2 = N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <msubsup>
+    <mi>z</mi>
+    <mi>i</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>=</mo>
+  <mi>N</mi>
+</math> retains the scale of the discrete labels and excludes the trivial vector <math alttext="z = 0" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>z</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+</math>. The relaxed problem is</p>
+
+<div class="eq">
+  <div class="math">
+  <div class="eqn"><math alttext="\min_{z \in \R^N} \ \sum_{i,j=1}^{N} w\!\left(\norm{x_i - x_j}\right) \abs{z_i - z_j}^2, \qquad \text{subject to } \ \sum_{i=1}^{N} z_i = 0, \quad \sum_{i=1}^{N} z_i^2 = N." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">min</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>z</mi>
+      <mo>&#x2208;</mo>
+      <msup>
+        <mrow data-mjx-texclass="ORD">
+          <mi mathvariant="double-struck">R</mi>
+        </mrow>
+        <mi>N</mi>
+      </msup>
+    </mrow>
+  </munder>
+  <mtext>&#xA0;</mtext>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <mi>w</mi>
+  <mstyle scriptlevel="0">
+    <mspace width="-0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">(</mo>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>x</mi>
+        <mi>i</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <msub>
+        <mi>x</mi>
+        <mi>j</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mo data-mjx-texclass="CLOSE">)</mo>
+  </mrow>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN">|</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>i</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>j</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE">|</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mtext>subject to&#xA0;</mtext>
+  <mtext>&#xA0;</mtext>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>0</mn>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="1em"></mspace>
+  </mstyle>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msubsup>
+    <mi>z</mi>
+    <mi>i</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>=</mo>
+  <mi>N</mi>
+  <mo>.</mo>
+</math></div>
+  </div>
+  <div class="tag">(M)</div>
+</div>
+
+<p class="noindent">The relaxed vector embeds the data points on the real line. A two-way partition can be obtained by thresholding at zero. If an exactly balanced partition is required, assign the <math alttext="N/2" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math> smallest coordinates to one cluster and the <math alttext="N/2" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math> largest to the other.</p>
+
+<h3 class="subsection" id="S2.2"><span class="secnum">2.2</span>Graph Laplacian form</h3>
+
+<p>Define the symmetric weight matrix and degree matrix by</p>
+<div class="eqn"><math alttext="W_{ij} = w\!\left(\norm{x_i - x_j}\right), \qquad D = \diag(d_1,\dots,d_N), \qquad d_i = \sum_{j=1}^{N} W_{ij}." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <mi>w</mi>
+  <mstyle scriptlevel="0">
+    <mspace width="-0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">(</mo>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+      <msub>
+        <mi>x</mi>
+        <mi>i</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <msub>
+        <mi>x</mi>
+        <mi>j</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+    </mrow>
+    <mo data-mjx-texclass="CLOSE">)</mo>
+  </mrow>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mi>D</mi>
+  <mo>=</mo>
+  <mi>diag</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>d</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>d</mi>
+    <mi>N</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>d</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mo>.</mo>
+</math></div>
+<p class="noindent">The unnormalized graph Laplacian is <math alttext="L = D - W" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>L</mi>
+  <mo>=</mo>
+  <mi>D</mi>
+  <mo>&#x2212;</mo>
+  <mi>W</mi>
+</math>.</p>
+
+<div class="thm italic statement" id="L2.1">
+  <p><span class="head">Lemma 2.1 <span class="name">(Dirichlet energy).</span></span>
+  <span class="body">For every <math alttext="z \in \R^N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>z</mi>
+  <mo>&#x2208;</mo>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="double-struck">R</mi>
+    </mrow>
+    <mi>N</mi>
+  </msup>
+</math>,
+  <div class="eqn"><math alttext="\sum_{i,j=1}^{N} W_{ij}\abs{z_i - z_j}^2 = 2 z\T (D - W) z = z\T M z, \qquad M := 2D - 2W = 2L." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <msup>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN">|</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>i</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <msub>
+        <mi>z</mi>
+        <mi>j</mi>
+      </msub>
+      <mo data-mjx-texclass="CLOSE">|</mo>
+    </mrow>
+    <mn>2</mn>
+  </msup>
+  <mo>=</mo>
+  <mn>2</mn>
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mo stretchy="false">(</mo>
+  <mi>D</mi>
+  <mo>&#x2212;</mo>
+  <mi>W</mi>
+  <mo stretchy="false">)</mo>
+  <mi>z</mi>
+  <mo>=</mo>
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mi>M</mi>
+  <mi>z</mi>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mi>M</mi>
+  <mo>:=</mo>
+  <mn>2</mn>
+  <mi>D</mi>
+  <mo>&#x2212;</mo>
+  <mn>2</mn>
+  <mi>W</mi>
+  <mo>=</mo>
+  <mn>2</mn>
+  <mi>L</mi>
+  <mo>.</mo>
+</math></div></span></p>
+</div>
+
+<div class="proof proof-block">
+  <p><span class="head">Proof.</span> Using <math alttext="W_{ij} = W_{ji}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mi>i</mi>
+    </mrow>
+  </msub>
+</math>,
+  <div class="eqn"><math alttext="\sum_{i,j=1}^{N} W_{ij}(z_i - z_j)^2 = \sum_{i,j} W_{ij} z_i^2 + \sum_{i,j} W_{ij} z_j^2 - 2\sum_{i,j} W_{ij} z_i z_j = 2 z\T D z - 2 z\T W z = 2 z\T (D - W) z. \ \square" xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>z</mi>
+    <mi>j</mi>
+  </msub>
+  <msup>
+    <mo stretchy="false">)</mo>
+    <mn>2</mn>
+  </msup>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <msubsup>
+    <mi>z</mi>
+    <mi>i</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>+</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <msubsup>
+    <mi>z</mi>
+    <mi>j</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>&#x2212;</mo>
+  <mn>2</mn>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>W</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <msub>
+    <mi>z</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mi>z</mi>
+    <mi>j</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>2</mn>
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mi>D</mi>
+  <mi>z</mi>
+  <mo>&#x2212;</mo>
+  <mn>2</mn>
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mi>W</mi>
+  <mi>z</mi>
+  <mo>=</mo>
+  <mn>2</mn>
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mo stretchy="false">(</mo>
+  <mi>D</mi>
+  <mo>&#x2212;</mo>
+  <mi>W</mi>
+  <mo stretchy="false">)</mo>
+  <mi>z</mi>
+  <mo>.</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>&#x25FB;</mi>
+</math></div></p>
+</div>
+
+<p>In particular, <math alttext="M" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>M</mi>
+</math> is positive semidefinite because its quadratic form is a sum of nonnegative terms. Also <math alttext="M\one = 0" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>M</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+  <mo>=</mo>
+  <mn>0</mn>
+</math>, since <math alttext="D\one = W\one" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>D</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+  <mo>=</mo>
+  <mi>W</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+</math>.</p>
+
+<h3 class="subsection" id="S2.3"><span class="secnum">2.3</span>The Courant–Fischer theorem</h3>
+
+<p>For a real symmetric matrix <math alttext="A \in \R^{n \times n}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>A</mi>
+  <mo>&#x2208;</mo>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="double-struck">R</mi>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+      <mo>&#xD7;</mo>
+      <mi>n</mi>
+    </mrow>
+  </msup>
+</math> and <math alttext="x \ne 0" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+  <mo>&#x2260;</mo>
+  <mn>0</mn>
+</math>, define the Rayleigh quotient</p>
+<div class="eqn"><math alttext="R_A(x) = \frac{x\T A x}{x\T x}." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>R</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <msup>
+        <mi>x</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mi mathvariant="normal">&#x22A4;</mi>
+        </mrow>
+      </msup>
+      <mi>A</mi>
+      <mi>x</mi>
+    </mrow>
+    <mrow>
+      <msup>
+        <mi>x</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mi mathvariant="normal">&#x22A4;</mi>
+        </mrow>
+      </msup>
+      <mi>x</mi>
+    </mrow>
+  </mfrac>
+  <mo>.</mo>
+</math></div>
+
+<div class="thm italic statement" id="T2.2">
+  <p><span class="head">Theorem 2.2 <span class="name">(Courant–Fischer).</span></span>
+  <span class="body">Let the eigenvalues of <math alttext="A" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>A</mi>
+</math> be ordered as <math alttext="\lambda_1 \ge \cdots \ge \lambda_n" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>&#x2265;</mo>
+  <mo>&#x22EF;</mo>
+  <mo>&#x2265;</mo>
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>n</mi>
+  </msub>
+</math>. For <math alttext="k = 1,\dots,n" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+  <mo>=</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mi>n</mi>
+</math>,
+  <div class="eqn"><math alttext="\lambda_k = \max_{\substack{S \le \R^n \\ \dimm S = k}} \ \min_{\substack{x \in S \\ x \ne 0}} R_A(x), \qquad\qquad \lambda_k = \min_{\substack{T \le \R^n \\ \dimm T = n-k+1}} \ \max_{\substack{x \in T \\ x \ne 0}} R_A(x)." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>k</mi>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">max</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
+        <mtr>
+          <mtd>
+            <mi>S</mi>
+            <mo>&#x2264;</mo>
+            <msup>
+              <mrow data-mjx-texclass="ORD">
+                <mi mathvariant="double-struck">R</mi>
+              </mrow>
+              <mi>n</mi>
+            </msup>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi>dim</mi>
+            <mi>S</mi>
+            <mo>=</mo>
+            <mi>k</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mrow>
+  </munder>
+  <mtext>&#xA0;</mtext>
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">min</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
+        <mtr>
+          <mtd>
+            <mi>x</mi>
+            <mo>&#x2208;</mo>
+            <mi>S</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi>x</mi>
+            <mo>&#x2260;</mo>
+            <mn>0</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>R</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>k</mi>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">min</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
+        <mtr>
+          <mtd>
+            <mi>T</mi>
+            <mo>&#x2264;</mo>
+            <msup>
+              <mrow data-mjx-texclass="ORD">
+                <mi mathvariant="double-struck">R</mi>
+              </mrow>
+              <mi>n</mi>
+            </msup>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi>dim</mi>
+            <mi>T</mi>
+            <mo>=</mo>
+            <mi>n</mi>
+            <mo>&#x2212;</mo>
+            <mi>k</mi>
+            <mo>+</mo>
+            <mn>1</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mrow>
+  </munder>
+  <mtext>&#xA0;</mtext>
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">max</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em">
+        <mtr>
+          <mtd>
+            <mi>x</mi>
+            <mo>&#x2208;</mo>
+            <mi>T</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi>x</mi>
+            <mo>&#x2260;</mo>
+            <mn>0</mn>
+          </mtd>
+        </mtr>
+      </mtable>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>R</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>.</mo>
+</math></div></span></p>
+</div>
+
+<div class="proof proof-block">
+  <p><span class="head">Proof.</span> Because <math alttext="A" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>A</mi>
+</math> is symmetric, it has an orthonormal eigenbasis <math alttext="v_1,\dots,v_n" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>v</mi>
+    <mi>n</mi>
+  </msub>
+</math>, with <math alttext="A v_i = \lambda_i v_i" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>A</mi>
+  <msub>
+    <mi>v</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mi>v</mi>
+    <mi>i</mi>
+  </msub>
+</math>. If <math alttext="x = \sum_{i=1}^{n} c_i v_i" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>n</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>c</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mi>v</mi>
+    <mi>i</mi>
+  </msub>
+</math>, then
+  <div class="eqn"><math alttext="R_A(x) = \frac{\sum_{i=1}^{n} \lambda_i c_i^2}{\sum_{i=1}^{n} c_i^2}," xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>R</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <munderover>
+        <mo data-mjx-texclass="OP">&#x2211;</mo>
+        <mrow data-mjx-texclass="ORD">
+          <mi>i</mi>
+          <mo>=</mo>
+          <mn>1</mn>
+        </mrow>
+        <mrow data-mjx-texclass="ORD">
+          <mi>n</mi>
+        </mrow>
+      </munderover>
+      <msub>
+        <mi>&#x3BB;</mi>
+        <mi>i</mi>
+      </msub>
+      <msubsup>
+        <mi>c</mi>
+        <mi>i</mi>
+        <mn>2</mn>
+      </msubsup>
+    </mrow>
+    <mrow>
+      <munderover>
+        <mo data-mjx-texclass="OP">&#x2211;</mo>
+        <mrow data-mjx-texclass="ORD">
+          <mi>i</mi>
+          <mo>=</mo>
+          <mn>1</mn>
+        </mrow>
+        <mrow data-mjx-texclass="ORD">
+          <mi>n</mi>
+        </mrow>
+      </munderover>
+      <msubsup>
+        <mi>c</mi>
+        <mi>i</mi>
+        <mn>2</mn>
+      </msubsup>
+    </mrow>
+  </mfrac>
+  <mo>,</mo>
+</math></div>
+  a weighted average of the eigenvalues.</p>
+
+  <p>Take <math alttext="S_0 = \operatorname{span}\{v_1,\dots,v_k\}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>S</mi>
+    <mn>0</mn>
+  </msub>
+  <mo>=</mo>
+  <mi>span</mi>
+  <mo fence="false" stretchy="false">{</mo>
+  <msub>
+    <mi>v</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>v</mi>
+    <mi>k</mi>
+  </msub>
+  <mo fence="false" stretchy="false">}</mo>
+</math>. Every nonzero <math alttext="x \in S_0" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+  <mo>&#x2208;</mo>
+  <msub>
+    <mi>S</mi>
+    <mn>0</mn>
+  </msub>
+</math> satisfies <math alttext="R_A(x) \ge \lambda_k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>R</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2265;</mo>
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>k</mi>
+  </msub>
+</math>, and equality is attained at <math alttext="v_k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mi>k</mi>
+  </msub>
+</math>. Hence the max–min is at least <math alttext="\lambda_k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>k</mi>
+  </msub>
+</math>.</p>
+
+  <p>Conversely, let <math alttext="S" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>S</mi>
+</math> be any <math alttext="k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math>-dimensional subspace and set <math alttext="V = \operatorname{span}\{v_k,\dots,v_n\}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>V</mi>
+  <mo>=</mo>
+  <mi>span</mi>
+  <mo fence="false" stretchy="false">{</mo>
+  <msub>
+    <mi>v</mi>
+    <mi>k</mi>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>v</mi>
+    <mi>n</mi>
+  </msub>
+  <mo fence="false" stretchy="false">}</mo>
+</math>, whose dimension is <math alttext="n-k+1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+  <mo>&#x2212;</mo>
+  <mi>k</mi>
+  <mo>+</mo>
+  <mn>1</mn>
+</math>. The dimension formula gives
+  <div class="eqn"><math alttext="\dimm(S \cap V) \ge k + (n-k+1) - n = 1." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>dim</mi>
+  <mo stretchy="false">(</mo>
+  <mi>S</mi>
+  <mo>&#x2229;</mo>
+  <mi>V</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2265;</mo>
+  <mi>k</mi>
+  <mo>+</mo>
+  <mo stretchy="false">(</mo>
+  <mi>n</mi>
+  <mo>&#x2212;</mo>
+  <mi>k</mi>
+  <mo>+</mo>
+  <mn>1</mn>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2212;</mo>
+  <mi>n</mi>
+  <mo>=</mo>
+  <mn>1.</mn>
+</math></div>
+  For a nonzero <math alttext="x \in S \cap V" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+  <mo>&#x2208;</mo>
+  <mi>S</mi>
+  <mo>&#x2229;</mo>
+  <mi>V</mi>
+</math>, <math alttext="R_A(x) \le \lambda_k" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>R</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2264;</mo>
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>k</mi>
+  </msub>
+</math>. Thus
+  <div class="eqn"><math alttext="\min_{x \in S \setminus \{0\}} R_A(x) \le \lambda_k" xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">min</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>x</mi>
+      <mo>&#x2208;</mo>
+      <mi>S</mi>
+      <mo>&#x2216;</mo>
+      <mo fence="false" stretchy="false">{</mo>
+      <mn>0</mn>
+      <mo fence="false" stretchy="false">}</mo>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>R</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2264;</mo>
+  <msub>
+    <mi>&#x3BB;</mi>
+    <mi>k</mi>
+  </msub>
+</math></div>
+  for every <math alttext="S" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>S</mi>
+</math>, proving the max–min formula. The min–max formula follows by the same argument with the roles of the top and bottom eigenspaces reversed. <span class="qed"><math alttext="\square" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x25FB;</mi>
+</math></span></p>
+</div>
+
+<h3 class="subsection" id="S2.4"><span class="secnum">2.4</span>Solution of the spectral relaxation</h3>
+
+<div class="thm italic statement" id="T2.3">
+  <p><span class="head">Theorem 2.3 <span class="name">(Fiedler-vector solution).</span></span>
+  <span class="body">Let the eigenvalues of <math alttext="M = 2(D-W)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>M</mi>
+  <mo>=</mo>
+  <mn>2</mn>
+  <mo stretchy="false">(</mo>
+  <mi>D</mi>
+  <mo>&#x2212;</mo>
+  <mi>W</mi>
+  <mo stretchy="false">)</mo>
+</math> be
+  <div class="eqn"><math alttext="0 = \mu_1 \le \mu_2 \le \cdots \le \mu_N," xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mn>0</mn>
+  <mo>=</mo>
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>&#x2264;</mo>
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>&#x2264;</mo>
+  <mo>&#x22EF;</mo>
+  <mo>&#x2264;</mo>
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mi>N</mi>
+  </msub>
+  <mo>,</mo>
+</math></div>
+  counted with multiplicity. If the weighted graph is connected, then <math alttext="\mu_1 = 0" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>=</mo>
+  <mn>0</mn>
+</math> is simple and an associated unit eigenvector is
+  <div class="eqn"><math alttext="v_1 = \frac{\one}{\sqrt{N}}." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>v</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>=</mo>
+  <mfrac>
+    <mrow data-mjx-texclass="ORD">
+      <mn mathvariant="bold">1</mn>
+    </mrow>
+    <msqrt>
+      <mi>N</mi>
+    </msqrt>
+  </mfrac>
+  <mo>.</mo>
+</math></div>
+  Every solution of (M) has the form
+  <div class="eqn"><math alttext="z^{*} = \sqrt{N}\, v," xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2217;</mo>
+    </mrow>
+  </msup>
+  <mo>=</mo>
+  <msqrt>
+    <mi>N</mi>
+  </msqrt>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>v</mi>
+  <mo>,</mo>
+</math></div>
+  where <math alttext="v" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>v</mi>
+</math> is a unit eigenvector in the eigenspace of the second-smallest eigenvalue <math alttext="\mu_2" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>2</mn>
+  </msub>
+</math>. The minimum value is <math alttext="N\mu_2" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>2</mn>
+  </msub>
+</math>.</span></p>
+</div>
+
+<div class="proof proof-block">
+  <p><span class="head">Proof.</span> Choose an orthonormal eigenbasis <math alttext="v_1,\dots,v_N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>v</mi>
+    <mi>N</mi>
+  </msub>
+</math> of <math alttext="M" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>M</mi>
+</math> with <math alttext="v_1 = \one/\sqrt{N}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mi>N</mi>
+  </msqrt>
+</math>. The balance constraint <math alttext="z\T\one = 0" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+  <mo>=</mo>
+  <mn>0</mn>
+</math> implies
+  <div class="eqn"><math alttext="z = \sum_{r=2}^{N} \alpha_r v_r," xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>z</mi>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>r</mi>
+      <mo>=</mo>
+      <mn>2</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>&#x3B1;</mi>
+    <mi>r</mi>
+  </msub>
+  <msub>
+    <mi>v</mi>
+    <mi>r</mi>
+  </msub>
+  <mo>,</mo>
+</math></div>
+  and the norm constraint gives
+  <div class="eqn"><math alttext="\sum_{r=2}^{N} \alpha_r^2 = N." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>r</mi>
+      <mo>=</mo>
+      <mn>2</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msubsup>
+    <mi>&#x3B1;</mi>
+    <mi>r</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>=</mo>
+  <mi>N</mi>
+  <mo>.</mo>
+</math></div>
+  Therefore
+  <div class="eqn"><math alttext="z\T M z = \sum_{r=2}^{N} \mu_r \alpha_r^2 \ \ge\ \mu_2 \sum_{r=2}^{N} \alpha_r^2 = N\mu_2 ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mi>M</mi>
+  <mi>z</mi>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>r</mi>
+      <mo>=</mo>
+      <mn>2</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mi>r</mi>
+  </msub>
+  <msubsup>
+    <mi>&#x3B1;</mi>
+    <mi>r</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mtext>&#xA0;</mtext>
+  <mo>&#x2265;</mo>
+  <mtext>&#xA0;</mtext>
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>2</mn>
+  </msub>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>r</mi>
+      <mo>=</mo>
+      <mn>2</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msubsup>
+    <mi>&#x3B1;</mi>
+    <mi>r</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>=</mo>
+  <mi>N</mi>
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>.</mo>
+</math></div>
+  Equality holds exactly when <math alttext="z" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>z</mi>
+</math> lies in the <math alttext="\mu_2" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3BC;</mi>
+    <mn>2</mn>
+  </msub>
+</math>-eigenspace and has norm <math alttext="\sqrt{N}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msqrt>
+    <mi>N</mi>
+  </msqrt>
+</math>. <span class="qed"><math alttext="\square" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x25FB;</mi>
+</math></span></p>
+</div>
+
+<div class="thm statement" id="R2.4">
+  <p><span class="head">Remark 2.4.</span> If the graph has <math alttext="c \gt 1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>c</mi>
+  <mo>&gt;</mo>
+  <mn>1</mn>
+</math> connected components, then the nullspace of <math alttext="M" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>M</mi>
+</math> has dimension <math alttext="c" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>c</mi>
+</math>. A nonconstant vector in that nullspace can be orthogonal to <math alttext="\one" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+</math>, so the relaxed minimum is zero and components can be separated without cutting a positive-weight edge. The connectedness assumption is what makes the first nonconstant mode the usual Fiedler vector.</p>
+</div>
+
+<!-- ================= Section 3 ================= -->
+
+<h2 class="section" id="S3"><span class="secnum">3</span>Probabilistic interpretation</h2>
+
+<p>For a general weighted graph with degree matrix <math alttext="D" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>D</mi>
+</math>, the associated random walk has transition matrix <math alttext="P = D^{-1}W" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+  <mo>=</mo>
+  <msup>
+    <mi>D</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mi>W</mi>
+</math>, provided every degree is positive. This matrix is row-stochastic, although it need not be symmetric even when <math alttext="W" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>W</mi>
+</math> is symmetric.</p>
+
+<p>To make the spectral relation especially transparent, we now consider the special case of a symmetric, nonnegative, row-stochastic transition matrix <math alttext="P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+</math>, so <math alttext="\sum_{j=1}^{N} P_{ij} = 1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msub>
+    <mi>P</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <mn>1</mn>
+</math> for every <math alttext="i" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>i</mi>
+</math>. It may be viewed as the transition matrix of a random walk on the data graph, with <math alttext="P_{ij} = \Prob(Y_{t+1} = j \mid Y_t = i)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>P</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <mi>Pr</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>Y</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>t</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <mi>j</mi>
+  <mo>&#x2223;</mo>
+  <msub>
+    <mi>Y</mi>
+    <mi>t</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>i</mi>
+  <mo stretchy="false">)</mo>
+</math>.</p>
+
+<p>For the column probability vector</p>
+<div class="eqn"><math alttext="F(t) = \big(\Prob(Y_t = 1),\ \dots,\ \Prob(Y_t = N)\big)\T," xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>F</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo minsize="1.2em" maxsize="1.2em">(</mo>
+  </mrow>
+  <mi>Pr</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>Y</mi>
+    <mi>t</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>1</mn>
+  <mo stretchy="false">)</mo>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>Pr</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>Y</mi>
+    <mi>t</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>N</mi>
+  <mo stretchy="false">)</mo>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mo minsize="1.2em" maxsize="1.2em">)</mo>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mo>,</mo>
+</math></div>
+<p class="noindent">the usual row-transition convention gives</p>
+<div class="eqn"><math alttext="F(t+1) = P\T F(t) = P F(t), \qquad F(t) = P^t F(0)," xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>F</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo>+</mo>
+  <mn>1</mn>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <msup>
+    <mi>P</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mi>F</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>P</mi>
+  <mi>F</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mi>F</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <msup>
+    <mi>P</mi>
+    <mi>t</mi>
+  </msup>
+  <mi>F</mi>
+  <mo stretchy="false">(</mo>
+  <mn>0</mn>
+  <mo stretchy="false">)</mo>
+  <mo>,</mo>
+</math></div>
+<p class="noindent">where the second equality uses symmetry. Symmetry and stochasticity imply that the uniform distribution <math alttext="\tfrac{1}{N}\one" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mstyle displaystyle="false" scriptlevel="0">
+    <mfrac>
+      <mn>1</mn>
+      <mi>N</mi>
+    </mfrac>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+</math> is stationary.</p>
+
+<div class="thm italic statement" id="L3.1">
+  <p><span class="head">Lemma 3.1 <span class="name">(Spectrum of a symmetric stochastic matrix).</span></span>
+  <span class="body">Assume the graph of <math alttext="P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+</math> is connected. Order the eigenvalues as
+  <div class="eqn"><math alttext="1 = \eta_1 \gt \eta_2 \ge \cdots \ge \eta_N \ge -1." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mn>1</mn>
+  <mo>=</mo>
+  <msub>
+    <mi>&#x3B7;</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>&gt;</mo>
+  <msub>
+    <mi>&#x3B7;</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>&#x2265;</mo>
+  <mo>&#x22EF;</mo>
+  <mo>&#x2265;</mo>
+  <msub>
+    <mi>&#x3B7;</mi>
+    <mi>N</mi>
+  </msub>
+  <mo>&#x2265;</mo>
+  <mo>&#x2212;</mo>
+  <mn>1.</mn>
+</math></div>
+  Then
+  <div class="eqn"><math alttext="u_1 = \frac{\one}{\sqrt{N}}" xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>u</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>=</mo>
+  <mfrac>
+    <mrow data-mjx-texclass="ORD">
+      <mn mathvariant="bold">1</mn>
+    </mrow>
+    <msqrt>
+      <mi>N</mi>
+    </msqrt>
+  </mfrac>
+</math></div>
+  is a unit eigenvector for <math alttext="\eta_1 = 1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3B7;</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>=</mo>
+  <mn>1</mn>
+</math>, and the eigenvalue <math alttext="1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+</math> is simple.</span></p>
+</div>
+
+<div class="proof proof-block">
+  <p><span class="head">Proof.</span> Since <math alttext="P\one = \one" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+</math>, the number <math alttext="1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+</math> is an eigenvalue. For any <math alttext="x \in \R^N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+  <mo>&#x2208;</mo>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="double-struck">R</mi>
+    </mrow>
+    <mi>N</mi>
+  </msup>
+</math>, symmetry, nonnegativity, and <math alttext="2\abs{x_i x_j} \le x_i^2 + x_j^2" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">|</mo>
+    <msub>
+      <mi>x</mi>
+      <mi>i</mi>
+    </msub>
+    <msub>
+      <mi>x</mi>
+      <mi>j</mi>
+    </msub>
+    <mo data-mjx-texclass="CLOSE">|</mo>
+  </mrow>
+  <mo>&#x2264;</mo>
+  <msubsup>
+    <mi>x</mi>
+    <mi>i</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>+</mo>
+  <msubsup>
+    <mi>x</mi>
+    <mi>j</mi>
+    <mn>2</mn>
+  </msubsup>
+</math> yield
+  <div class="eqn"><math alttext="\abs{x\T P x} \le \sum_{i,j} P_{ij}\abs{x_i x_j} \le \tfrac{1}{2}\sum_{i,j} P_{ij}\left(x_i^2 + x_j^2\right) = x\T x." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">|</mo>
+    <msup>
+      <mi>x</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mi mathvariant="normal">&#x22A4;</mi>
+      </mrow>
+    </msup>
+    <mi>P</mi>
+    <mi>x</mi>
+    <mo data-mjx-texclass="CLOSE">|</mo>
+  </mrow>
+  <mo>&#x2264;</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>P</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">|</mo>
+    <msub>
+      <mi>x</mi>
+      <mi>i</mi>
+    </msub>
+    <msub>
+      <mi>x</mi>
+      <mi>j</mi>
+    </msub>
+    <mo data-mjx-texclass="CLOSE">|</mo>
+  </mrow>
+  <mo>&#x2264;</mo>
+  <mstyle displaystyle="false" scriptlevel="0">
+    <mfrac>
+      <mn>1</mn>
+      <mn>2</mn>
+    </mfrac>
+  </mstyle>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>,</mo>
+      <mi>j</mi>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>P</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">(</mo>
+    <msubsup>
+      <mi>x</mi>
+      <mi>i</mi>
+      <mn>2</mn>
+    </msubsup>
+    <mo>+</mo>
+    <msubsup>
+      <mi>x</mi>
+      <mi>j</mi>
+      <mn>2</mn>
+    </msubsup>
+    <mo data-mjx-texclass="CLOSE">)</mo>
+  </mrow>
+  <mo>=</mo>
+  <msup>
+    <mi>x</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mi>x</mi>
+  <mo>.</mo>
+</math></div>
+  Thus every eigenvalue lies in <math alttext="[-1,1]" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">[</mo>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mn>1</mn>
+  <mo stretchy="false">]</mo>
+</math>.</p>
+
+  <p>If <math alttext="P v = v" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+  <mi>v</mi>
+  <mo>=</mo>
+  <mi>v</mi>
+</math>, choose an index <math alttext="r" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+</math> for which <math alttext="v_r = \max_i v_i" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mi>r</mi>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP" movablelimits="true">max</mo>
+    <mi>i</mi>
+  </munder>
+  <msub>
+    <mi>v</mi>
+    <mi>i</mi>
+  </msub>
+</math> (replacing <math alttext="v" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>v</mi>
+</math> by <math alttext="-v" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#x2212;</mo>
+  <mi>v</mi>
+</math> if needed). Then
+  <div class="eqn"><math alttext="v_r = \sum_j P_{rj} v_j \le \sum_j P_{rj} v_r = v_r ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>v</mi>
+    <mi>r</mi>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>j</mi>
+  </munder>
+  <msub>
+    <mi>P</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>r</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <msub>
+    <mi>v</mi>
+    <mi>j</mi>
+  </msub>
+  <mo>&#x2264;</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>j</mi>
+  </munder>
+  <msub>
+    <mi>P</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>r</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <msub>
+    <mi>v</mi>
+    <mi>r</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>v</mi>
+    <mi>r</mi>
+  </msub>
+  <mo>.</mo>
+</math></div>
+  Equality forces every neighbor of <math alttext="r" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+</math> with positive transition probability to have the same value <math alttext="v_r" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mi>r</mi>
+  </msub>
+</math>. Connectivity propagates this equality to all vertices, so <math alttext="v" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>v</mi>
+</math> is proportional to <math alttext="\one" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+</math>. Hence the eigenspace for <math alttext="1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+</math> is one-dimensional. A real symmetric matrix is orthogonally diagonalizable, so algebraic and geometric multiplicities agree and <math alttext="\eta_2 \lt 1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3B7;</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>&lt;</mo>
+  <mn>1</mn>
+</math>. <span class="qed"><math alttext="\square" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x25FB;</mi>
+</math></span></p>
+</div>
+
+<p>Let <math alttext="u_1,\dots,u_N" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>u</mi>
+    <mi>N</mi>
+  </msub>
+</math> be an orthonormal eigenbasis of <math alttext="P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+</math>. The spectral decomposition gives</p>
+<div class="eqn"><math alttext="P^t = \sum_{j=1}^{N} \eta_j^t\, u_j u_j\T ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msup>
+    <mi>P</mi>
+    <mi>t</mi>
+  </msup>
+  <mo>=</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msubsup>
+    <mi>&#x3B7;</mi>
+    <mi>j</mi>
+    <mi>t</mi>
+  </msubsup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>u</mi>
+    <mi>j</mi>
+  </msub>
+  <msubsup>
+    <mi>u</mi>
+    <mi>j</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msubsup>
+  <mo>.</mo>
+</math></div>
+
+<p>Consider the Laplacian-form matrix <math alttext="M_P = 2I - 2P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>M</mi>
+    <mi>P</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>2</mn>
+  <mi>I</mi>
+  <mo>&#x2212;</mo>
+  <mn>2</mn>
+  <mi>P</mi>
+</math>. The matrices <math alttext="M_P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>M</mi>
+    <mi>P</mi>
+  </msub>
+</math> and <math alttext="P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+</math> have the same eigenvectors, and an eigenvalue <math alttext="\eta" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B7;</mi>
+</math> of <math alttext="P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+</math> corresponds to the eigenvalue <math alttext="2(1-\eta)" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mo stretchy="false">(</mo>
+  <mn>1</mn>
+  <mo>&#x2212;</mo>
+  <mi>&#x3B7;</mi>
+  <mo stretchy="false">)</mo>
+</math> of <math alttext="M_P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>M</mi>
+    <mi>P</mi>
+  </msub>
+</math>. The second-smallest eigenvector of <math alttext="M_P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>M</mi>
+    <mi>P</mi>
+  </msub>
+</math> is therefore a second-largest eigenvector of <math alttext="P" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+</math>.</p>
+
+<p>If <math alttext="z" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>z</mi>
+</math> is normalized so that <math alttext="\norm{z} = \sqrt{N}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN" symmetric="true">&#x2016;</mo>
+    <mi>z</mi>
+    <mo data-mjx-texclass="CLOSE" symmetric="true">&#x2016;</mo>
+  </mrow>
+  <mo>=</mo>
+  <msqrt>
+    <mi>N</mi>
+  </msqrt>
+</math>, take</p>
+<div class="eqn"><math alttext="u_1 = \frac{\one}{\sqrt{N}}, \qquad u_2 = \frac{z}{\sqrt{N}}." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>u</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>=</mo>
+  <mfrac>
+    <mrow data-mjx-texclass="ORD">
+      <mn mathvariant="bold">1</mn>
+    </mrow>
+    <msqrt>
+      <mi>N</mi>
+    </msqrt>
+  </mfrac>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>u</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>=</mo>
+  <mfrac>
+    <mi>z</mi>
+    <msqrt>
+      <mi>N</mi>
+    </msqrt>
+  </mfrac>
+  <mo>.</mo>
+</math></div>
+<p class="noindent">Then</p>
+<div class="eqn"><math alttext="P^t = \frac{1}{N}\one\one\T + \frac{1}{N}\,\eta_2^t\, z z\T + \sum_{j=3}^{N} \eta_j^t\, u_j u_j\T ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msup>
+    <mi>P</mi>
+    <mi>t</mi>
+  </msup>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>N</mi>
+  </mfrac>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mn mathvariant="bold">1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mo>+</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>N</mi>
+  </mfrac>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <msubsup>
+    <mi>&#x3B7;</mi>
+    <mn>2</mn>
+    <mi>t</mi>
+  </msubsup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>z</mi>
+  <msup>
+    <mi>z</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mo>+</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mo>=</mo>
+      <mn>3</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>N</mi>
+    </mrow>
+  </munderover>
+  <msubsup>
+    <mi>&#x3B7;</mi>
+    <mi>j</mi>
+    <mi>t</mi>
+  </msubsup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>u</mi>
+    <mi>j</mi>
+  </msub>
+  <msubsup>
+    <mi>u</mi>
+    <mi>j</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msubsup>
+  <mo>.</mo>
+</math></div>
+
+<p>Thus the spectral-clustering coordinate is the nonconstant eigenmode associated with the second-largest eigenvalue of the transition matrix. When the nontrivial spectrum is nonnegative, this is also the slowest-decaying nonconstant mode.</p>
+
+<div class="thm statement" id="R3.2">
+  <p><span class="head">Remark 3.2 <span class="name">(Periodicity).</span></span> Connectedness alone does not ensure that <math alttext="P^t" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>P</mi>
+    <mi>t</mi>
+  </msup>
+</math> converges: for example, a random walk on a bipartite graph can have eigenvalue <math alttext="-1" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+</math>. If the chain is also aperiodic, then
+  <div class="eqn"><math alttext="\abs{\eta_j} \lt 1 \quad \text{for all } j \ge 2," xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">|</mo>
+    <msub>
+      <mi>&#x3B7;</mi>
+      <mi>j</mi>
+    </msub>
+    <mo data-mjx-texclass="CLOSE">|</mo>
+  </mrow>
+  <mo>&lt;</mo>
+  <mn>1</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="1em"></mspace>
+  </mstyle>
+  <mtext>for all&#xA0;</mtext>
+  <mi>j</mi>
+  <mo>&#x2265;</mo>
+  <mn>2</mn>
+  <mo>,</mo>
+</math></div>
+  and
+  <div class="eqn"><math alttext="P^t \longrightarrow \frac{1}{N}\one\one\T ." xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msup>
+    <mi>P</mi>
+    <mi>t</mi>
+  </msup>
+  <mo stretchy="false">&#x27F6;</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>N</mi>
+  </mfrac>
+  <mrow data-mjx-texclass="ORD">
+    <mn mathvariant="bold">1</mn>
+  </mrow>
+  <msup>
+    <mrow data-mjx-texclass="ORD">
+      <mn mathvariant="bold">1</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x22A4;</mi>
+    </mrow>
+  </msup>
+  <mo>.</mo>
+</math></div>
+  A common fix is the lazy walk <math alttext="\widetilde{P} = \frac{I+P}{2}" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>P</mi>
+      <mo>~</mo>
+    </mover>
+  </mrow>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mi>I</mi>
+      <mo>+</mo>
+      <mi>P</mi>
+    </mrow>
+    <mn>2</mn>
+  </mfrac>
+</math>. It preserves the eigenvectors and transforms each eigenvalue <math alttext="\eta_j" xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3B7;</mi>
+    <mi>j</mi>
+  </msub>
+</math> into <math alttext="(1+\eta_j)/2 \in [0,1]" xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">(</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <msub>
+    <mi>&#x3B7;</mi>
+    <mi>j</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+  <mo>&#x2208;</mo>
+  <mo stretchy="false">[</mo>
+  <mn>0</mn>
+  <mo>,</mo>
+  <mn>1</mn>
+  <mo stretchy="false">]</mo>
+</math>. In particular, for the lazy walk the second-largest eigenvalue corresponds to the slowest-decaying nonconstant mode.</p>
+</div>
+
+</div>

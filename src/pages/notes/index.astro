@@ -1,0 +1,7 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NoteRow from '../../components/NoteRow.astro';
+import notes from '../../data/notes.json';
+const groups = [...new Set(notes.map(n=>n.group))];
+---
+<Layout title="Notes" active="Notes" description="Mathematical notes by Will Gao on PCA, gradient descent, clustering, regression, stochastic processes, and Black–Scholes."><div class="page-intro"><div class="eyebrow">The notebook</div><h1>Extended lecture notes.</h1><p>I sometimes expand lecture notes into a more systematic treatment, filling in proofs and connecting ideas. This is a selection of the notes I’ve extended.</p></div>{groups.map(group=><section class="collection"><h2>{group}</h2>{notes.filter(n=>n.group===group).map(note=><NoteRow note={note}/>)}</section>)}<p class="aside-note">These are personal notes, not official course materials. Sources are acknowledged in each piece. <a href="mailto:wgaostudio@gmail.com">Corrections are welcome.</a></p></Layout>

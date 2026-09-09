@@ -1,0 +1,12 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import notes from '../../data/notes.json';
+const files = import.meta.glob('../../content/*.html', { query: '?raw', import:'default', eager:true });
+export function getStaticPaths(){return notes.map(note=>({params:{slug:note.slug},props:{note}}));}
+const { note }=Astro.props;
+const tocs = import.meta.glob('../../data/*-toc.json', { import:'default', eager:true });
+const toc=tocs[`../../data/${note.slug}-toc.json`];
+const content=files[`../../content/${note.slug}.html`];
+const related = note.slug === 'black-scholes' ? notes.filter(n=>n.slug==='martingales-diffusions') : note.slug==='spectral-clustering' ? notes.filter(n=>n.slug==='spectral-theorem-pca'||n.slug==='gradient-descent') : notes.filter(n=>n.group===note.group && n.slug!==note.slug).slice(0,2);
+---
+<Layout title={note.title} description={note.summary} active="Notes" article><div class="article-top"><a href="/notes/">All notes</a><span class="meta"> / {note.group}</span></div><article class="reading-content"><header class="article-heading"><h1>{note.title}</h1>{note.subtitle && <p class="article-subtitle">{note.subtitle}</p>}<p class="meta">Will Gao · {note.date}</p></header><aside class="article-summary" aria-label="About this note"><p>{note.summary}</p><p class="meta"><strong>Prerequisites:</strong> {note.prerequisites}</p></aside><details class="contents"><summary>Contents</summary><ol>{toc.map(item=><li class:list={[{sub:item.level===3}]}><a href={`#${item.id}`}>{item.title}</a></li>)}</ol></details><div class="note-document" set:html={content}/>{related.length>0 && <section class="related"><h2>Continue reading</h2><ul>{related.map(n=><li><a href={`/notes/${n.slug}/`}>{n.title}</a></li>)}</ul></section>}<div class="related meta"><a href="mailto:wgaostudio@gmail.com">Send a correction</a> · <a href="/notes/">Back to all notes</a></div></article></Layout>

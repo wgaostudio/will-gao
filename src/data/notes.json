@@ -1,0 +1,56 @@
+[
+  {
+    "slug": "spectral-theorem-pca",
+    "title": "PCA Without the Fundamental Theorem of Algebra",
+    "subtitle": "A variational route through the spectral theorem, SVD, and low-rank approximation",
+    "group": "Mathematics of machine learning",
+    "date": "March 2025",
+    "summary": "Proves the real spectral theorem using compactness and Lagrange multipliers, then develops SVD, optimal low-rank approximation, and PCA—without invoking the Fundamental Theorem of Algebra.",
+    "prerequisites": "Linear algebra, multivariable calculus, and basic proof techniques."
+  },
+  {
+    "slug": "gradient-descent",
+    "title": "Gradient Descent: What Converges, and How Fast?",
+    "subtitle": "Stationarity, convex rates, and stochastic gradients",
+    "group": "Mathematics of machine learning",
+    "date": "March 2025",
+    "summary": "A proof-based account of standard convergence guarantees: smooth nonconvex objectives, convexity, strong convexity, and the effect of stochastic gradient noise.",
+    "prerequisites": "Multivariable calculus, linear algebra, and basic probability."
+  },
+  {
+    "slug": "spectral-clustering",
+    "title": "Spectral Clustering Through Courant–Fischer",
+    "subtitle": "From Lloyd’s algorithm to graph Laplacians and random walks",
+    "group": "Mathematics of machine learning",
+    "date": "March 2025",
+    "summary": "Develops k-means and spectral clustering from an optimization viewpoint, with a proof of the symmetric-matrix Courant–Fischer theorem and a random-walk interpretation.",
+    "prerequisites": "Linear algebra, eigenvalues, and basic optimization."
+  },
+  {
+    "slug": "linear-regression",
+    "title": "Ridge Regression and the Influence of a Single Point",
+    "subtitle": "Lagrange multipliers, Cook’s distance, and Sherman–Morrison",
+    "group": "Mathematics of machine learning",
+    "date": "March 2025",
+    "summary": "Derives the Lagrange multiplier condition geometrically, connects constrained and penalized ridge regression, and uses Sherman–Morrison to derive Cook’s distance. Ends with autoregression.",
+    "prerequisites": "Linear algebra, multivariable calculus, and introductory statistics."
+  },
+  {
+    "slug": "martingales-diffusions",
+    "title": "From Martingales to Diffusion Generators",
+    "subtitle": "Itô calculus, scale functions, and exit problems",
+    "group": "Probability and stochastic processes",
+    "date": "December 2025",
+    "summary": "Builds from conditional expectation to stochastic integration and diffusion generators, then connects scale functions, Green kernels, and boundary-value problems.",
+    "prerequisites": "Introductory probability and calculus."
+  },
+  {
+    "slug": "black-scholes",
+    "title": "Black–Scholes Through Replication",
+    "subtitle": "Risk-neutral pricing, delta, and American exercise",
+    "group": "Mathematical finance",
+    "date": "March 2026",
+    "summary": "Derives European call pricing through risk-neutral valuation and replication, then examines delta, early exercise, and a perpetual American put.",
+    "prerequisites": "Brownian motion, Itô’s formula, and basic martingales."
+  }
+]

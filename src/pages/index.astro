@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NoteRow from '../components/NoteRow.astro';
+import notes from '../data/notes.json';
+---
+<Layout description="Will Gao’s essays and extended mathematical notes. From combinatorial optimization and probability toward empirical AI.">
+  <section class="hero">
+    <div class="hero-copy">
+      <h1>Hi, I’m Will.</h1>
+      <p>I study computer science and mathematics at the University of Washington. My interests were previously in combinatorial optimization and probability; I’m now shifting toward empirical AI.</p>
+      <div class="intro-links"><a href="/about/">More about me</a><a href="mailto:wgaostudio@gmail.com">Say hello</a></div>
+    </div>
+    <img class="portrait" src="/portrait.jpg" alt="Will Gao" width="185" height="246" fetchpriority="high"/>
+  </section>
+  <section aria-labelledby="writing">
+    <div class="section-heading"><h2 id="writing">Writing</h2><a href="/writing/">All writing</a></div>
+    <article class="feature"><div class="meta">Musical theater</div><div><h3><a href="/writing/if-i-believe-in-you-this-much/">If I Believe in You This Much</a></h3><p>The watch, the timer, and the limits of love in <em>The Last Five Years</em>.</p><a class="text-link" href="/writing/if-i-believe-in-you-this-much/">Read the essay</a></div></article>
+  </section>
+  <section aria-labelledby="notes"><div class="section-heading"><h2 id="notes">Extended lecture notes</h2><a href="/notes/">All six notes</a></div><p class="collection-intro">I sometimes expand lecture notes into a more systematic treatment, filling in proofs and connecting ideas. Here are a few of those notes.</p><NoteRow note={notes[0]}/><NoteRow note={notes[2]}/><NoteRow note={notes[3]}/></section>
+</Layout>

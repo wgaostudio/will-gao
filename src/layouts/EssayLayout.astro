@@ -1,0 +1,11 @@
+---
+import Layout from './Layout.astro';
+const {title, subtitle, description, source, sourceUrl, date, dateISO, author = 'Will Gao'} = Astro.props;
+---
+<Layout title={title} description={description} active="Writing" article>
+  <article class="essay">
+    <header class="essay-header"><a class="text-link" href="/writing/">← Writing</a><h1>{title}</h1>{subtitle && <p class="essay-subtitle">{subtitle}</p>}<p class="meta">{author}{date && <> · <time datetime={dateISO}>{date}</time></>}<br/>Originally published {source === 'Substack' ? 'on' : 'in'} <a href={sourceUrl}>{source}</a>.</p></header>
+    <div class="essay-content"><slot/></div>
+    <p class="essay-end"><a href={sourceUrl}>Read the original on {source}</a> · <a href="/writing/">All writing</a></p>
+  </article>
+</Layout>

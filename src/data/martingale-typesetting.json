@@ -1,0 +1,417 @@
+[
+  {
+    "html": "<span class=\"math-inline\">(X<sub>t</sub>)</span>",
+    "tex": "(X_{t})",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">D</span>",
+    "tex": "D",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">X<sub>t</sub> = M<sub>t</sub> + A<sub>t</sub>,</div>",
+    "tex": "X_t = M_t + A_t,",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">M</span>",
+    "tex": "M",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">A</span>",
+    "tex": "A",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">A<sub>0</sub>=0</span>",
+    "tex": "A_{0}=0",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">D</span>",
+    "tex": "D",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">{X<sub>τ</sub>:τ≤T}</span>",
+    "tex": "\\{X_\\tau : \\tau\\le T\\}",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">M</span>",
+    "tex": "M",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">M<sup>2</sup></span>",
+    "tex": "M^{2}",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">M<sub>t</sub><sup>2</sup> = M<sub>0</sub><sup>2</sup> + N<sub>t</sub> + ⟨M⟩<sub>t</sub>,</div>",
+    "tex": "M_t^2 = M_0^2 + N_t + \\langle M\\rangle_t,",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">N</span>",
+    "tex": "N",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">⟨M⟩</span>",
+    "tex": "\\langle M\\rangle ",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">M<sub>t</sub><sup>2</sup>−M<sub>0</sub><sup>2</sup>−⟨M⟩<sub>t</sub></span>",
+    "tex": "M_{t}^{2}-M_{0}^{2}-\\langle M\\rangle _{t}",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">Y</span>",
+    "tex": "Y",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">H</span>",
+    "tex": "H",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">L</span>",
+    "tex": "L",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">Y<sub>t</sub> = Y<sub>0</sub> + ∫<sub>0</sub><sup>t</sup> H<sub>s</sub> dX<sub>s</sub> + L<sub>t</sub>.</div>",
+    "tex": "Y_t = Y_0 + \\int_0^t H_s\\,dX_s + L_t.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">d⟨X,Y⟩</span>",
+    "tex": "d\\langle X,Y\\rangle ",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">d⟨X⟩</span>",
+    "tex": "d\\langle X\\rangle ",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">H = d⟨X,Y⟩ / d⟨X⟩, &nbsp;&nbsp; L<sub>t</sub> = Y<sub>t</sub>−Y<sub>0</sub>−∫<sub>0</sub><sup>t</sup>H<sub>s</sub>dX<sub>s</sub>.</div>",
+    "tex": "\\begin{aligned} H &= \\frac{d\\langle X,Y\\rangle}{d\\langle X\\rangle},\\\\ L_t &= Y_t-Y_0-\\int_0^t H_s\\,dX_s.\\end{aligned}",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">d⟨X,∫H dX⟩=H d⟨X⟩</span>",
+    "tex": "d\\langle X,\\int H\\,dX\\rangle=H\\,d\\langle X\\rangle",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">⟨X,L⟩=0</span>",
+    "tex": "\\langle X,L\\rangle =0",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">Y</span>",
+    "tex": "Y",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">L</span>",
+    "tex": "L",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">f</span>",
+    "tex": "f",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">M<sub>t</sub><sup>f</sup> := f(X<sub>t</sub>)−f(X<sub>0</sub>)−∫<sub>0</sub><sup>t</sup> Lf(X<sub>s</sub>) ds</div>",
+    "tex": "M_t^f := f(X_t)-f(X_0)-\\int_0^t Lf(X_s)\\,ds",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">X</span>",
+    "tex": "X",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">f(x)=x</span>",
+    "tex": "f(x)=x",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">f(x)=x<sup>2</sup></span>",
+    "tex": "f(x)=x^{2}",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">M<sub>t</sub> := X<sub>t</sub>−X<sub>0</sub>−∫<sub>0</sub><sup>t</sup> μ(X<sub>s</sub>) ds</div>",
+    "tex": "M_t := X_t-X_0-\\int_0^t \\mu(X_s)\\,ds",
+    "display": true
+  },
+  {
+    "html": "<div class=\"math-display\">X<sub>t</sub><sup>2</sup>−X<sub>0</sub><sup>2</sup>−∫<sub>0</sub><sup>t</sup>[2X<sub>s</sub>μ(X<sub>s</sub>)+σ<sup>2</sup>(X<sub>s</sub>)] ds</div>",
+    "tex": "X_t^2-X_0^2-\\int_0^t [2X_s\\mu(X_s)+\\sigma^2(X_s)]\\,ds",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">X<sup>2</sup></span>",
+    "tex": "X^{2}",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">⟨M⟩<sub>t</sub> = ∫<sub>0</sub><sup>t</sup> σ<sup>2</sup>(X<sub>s</sub>) ds.</div>",
+    "tex": "\\langle M\\rangle_t = \\int_0^t \\sigma^2(X_s)\\,ds.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">σ(X<sub>s</sub>)≠0</span>",
+    "tex": "\\sigma (X_{s})\\ne 0",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">W<sub>t</sub> := ∫<sub>0</sub><sup>t</sup> [1/σ(X<sub>s</sub>)] dM<sub>s</sub>.</div>",
+    "tex": "W_t := \\int_0^t \\frac{1}{\\sigma(X_s)}\\,dM_s.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">⟨W⟩<sub>t</sub>=t</span>",
+    "tex": "\\langle W\\rangle _{t}=t",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">W</span>",
+    "tex": "W",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">dX<sub>t</sub> = μ(X<sub>t</sub>) dt + σ(X<sub>t</sub>) dW<sub>t</sub>.</div>",
+    "tex": "dX_t = \\mu(X_t)\\,dt + \\sigma(X_t)\\,dW_t.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">σ</span>",
+    "tex": "\\sigma ",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">W′</span>",
+    "tex": "W'",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">∫1<sub>{σ(X<sub>s</sub>)=0}</sub>dW′<sub>s</sub></span>",
+    "tex": "\\int \\mathbf{1}_{\\{\\sigma(X_s)=0\\}}\\,dW^{\\prime}_s",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">σ≠0</span>",
+    "tex": "\\sigma \\ne 0",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">t</span>",
+    "tex": "t",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">λ∈ℝ</span>",
+    "tex": "\\lambda \\in \\mathbb{R}",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">Z<sub>t</sub><sup>(λ)</sup> := exp{λ(X<sub>t</sub>−X<sub>0</sub>)−λ∫<sub>0</sub><sup>t</sup>μ(X<sub>s</sub>)ds−(λ<sup>2</sup>/2)∫<sub>0</sub><sup>t</sup>σ<sup>2</sup>(X<sub>s</sub>)ds}.</div>",
+    "tex": "\\begin{aligned}Z_t^{(\\lambda)} := \\exp\\Bigl\\{&\\lambda(X_t-X_0)-\\lambda\\int_0^t\\mu(X_s)\\,ds\\\\&-\\frac{\\lambda^2}{2}\\int_0^t\\sigma^2(X_s)\\,ds\\Bigr\\}.\\end{aligned}",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">N<sub>t</sub>=X<sub>t</sub>−X<sub>0</sub>−∫<sub>0</sub><sup>t</sup>μ(X<sub>s</sub>)ds</span>",
+    "tex": "N_t=X_t-X_0-\\int_0^t\\mu(X_s)\\,ds",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">dN<sub>t</sub>=σ(X<sub>t</sub>)dW<sub>t</sub></span>",
+    "tex": "dN_t=\\sigma(X_t)\\,dW_t",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">d⟨N⟩<sub>t</sub>=σ<sup>2</sup>(X<sub>t</sub>)dt</span>",
+    "tex": "d\\langle N\\rangle_t=\\sigma^2(X_t)\\,dt",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">exp(λN−λ<sup>2</sup>⟨N⟩/2)</span>",
+    "tex": "\\exp(\\lambda N-\\lambda^2\\langle N\\rangle/2)",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">dZ<sub>t</sub><sup>(λ)</sup> = λZ<sub>t</sub><sup>(λ)</sup>σ(X<sub>t</sub>) dW<sub>t</sub>.</div>",
+    "tex": "dZ_t^{(\\lambda)} = \\lambda Z_t^{(\\lambda)}\\sigma(X_t)\\,dW_t.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">Z<sup>(λ)</sup></span>",
+    "tex": "Z^{(\\lambda )}",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">E exp{(λ<sup>2</sup>/2)∫<sub>0</sub><sup>T</sup>σ<sup>2</sup>(X<sub>s</sub>)ds} &lt; ∞.</div>",
+    "tex": "\\mathbb{E}\\exp\\left\\{\\frac{\\lambda^2}{2}\\int_0^T\\sigma^2(X_s)\\,ds\\right\\} < \\infty.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">λ</span>",
+    "tex": "\\lambda ",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">λ=0</span>",
+    "tex": "\\lambda =0",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">μ(X<sub>t</sub>)dt</span>",
+    "tex": "\\mu(X_t)\\,dt",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">σ<sup>2</sup>(X<sub>t</sub>)dt</span>",
+    "tex": "\\sigma^2(X_t)\\,dt",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">Lf(x) = [1/m(x)] d/dx {f′(x)/s(x)}.</div>",
+    "tex": "Lf(x) = \\frac{1}{m(x)}\\frac{d}{dx}\\left\\{\\frac{f^{\\prime}(x)}{s(x)}\\right\\}.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">s′/s=−2μ/σ<sup>2</sup></span>",
+    "tex": "\\frac{s^{\\prime}}{s}=-\\frac{2\\mu}{\\sigma^2}",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">1/m=σ<sup>2</sup>s/2</span>",
+    "tex": "\\frac{1}{m}=\\frac{\\sigma^2s}{2}",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">Lf=−g</span>",
+    "tex": "Lf=-g",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">d/dx {f′(x)/s(x)} = −m(x)g(x).</div>",
+    "tex": "\\frac{d}{dx}\\left\\{\\frac{f^{\\prime}(x)}{s(x)}\\right\\} = -m(x)g(x).",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">y</span>",
+    "tex": "y",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">x↦G<sub>a,b</sub>(x,y)</span>",
+    "tex": "x\\mapsto G_{a,b}(x,y)",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">a</span>",
+    "tex": "a",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">b</span>",
+    "tex": "b",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">S(x)</span>",
+    "tex": "S(x)",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">y</span>",
+    "tex": "y",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">G′(y+,y)/s(y) − G′(y−,y)/s(y) = −1.</div>",
+    "tex": "\\frac{G^{\\prime}(y+,y)}{s(y)}-\\frac{G^{\\prime}(y-,y)}{s(y)}=-1.",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">g(y)m(y)dy</span>",
+    "tex": "g(y)m(y)\\,dy",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">Lf=−g</span>",
+    "tex": "Lf=-g",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">y=x</span>",
+    "tex": "y=x",
+    "display": false
+  },
+  {
+    "html": "<span class=\"math-inline\">φ</span>",
+    "tex": "\\varphi ",
+    "display": false
+  },
+  {
+    "html": "<div class=\"math-display\">d/dt ∫ φ(y)p(t,x,y)dy = d/dt P<sub>t</sub>φ(x) = P<sub>t</sub>Lφ(x)</div>",
+    "tex": "\\begin{aligned}\\frac{d}{dt}\\int\\varphi(y)p(t,x,y)\\,dy &= \\frac{d}{dt}P_t\\varphi(x)\\\\ &= P_tL\\varphi(x)\\end{aligned}",
+    "display": true
+  },
+  {
+    "html": "<div class=\"math-display\">= ∫ Lφ(y)p(t,x,y)dy = ∫ φ(y)L<sub>y</sub><sup>*</sup>p(t,x,y)dy.</div>",
+    "tex": "\\begin{aligned}&=\\int L\\varphi(y)p(t,x,y)\\,dy\\\\&=\\int\\varphi(y)L_y^*p(t,x,y)\\,dy.\\end{aligned}",
+    "display": true
+  },
+  {
+    "html": "<span class=\"math-inline\">∂<sub>t</sub>p=L<sub>y</sub><sup>*</sup>p</span>",
+    "tex": "\\partial _{t}p=L_{y}^{*}p",
+    "display": false
+  }
+]

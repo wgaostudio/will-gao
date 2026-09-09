@@ -1,0 +1,13 @@
+{
+  "name": "will-gao",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build"
+  },
+  "dependencies": {
+    "astro": "^5.13.0",
+    "mathjax-full": "^3.2.2"
+  }
+}
