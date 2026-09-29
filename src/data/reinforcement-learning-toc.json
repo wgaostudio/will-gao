@@ -1,0 +1,37 @@
+[
+  {
+    "id": "section-1",
+    "title": "1 Mathematical Prerequisites",
+    "level": 2
+  },
+  {
+    "id": "section-2",
+    "title": "2 Finite Discounted Markov Decision Processes",
+    "level": 2
+  },
+  {
+    "id": "section-3",
+    "title": "3 Policy Evaluation as a Fixed Point",
+    "level": 2
+  },
+  {
+    "id": "section-4",
+    "title": "4 Existence of an Optimal Policy",
+    "level": 2
+  },
+  {
+    "id": "section-5",
+    "title": "5 Policies with Memory",
+    "level": 2
+  },
+  {
+    "id": "section-6",
+    "title": "6 Value Iteration",
+    "level": 2
+  },
+  {
+    "id": "section-7",
+    "title": "7 Policy Iteration",
+    "level": 2
+  }
+]

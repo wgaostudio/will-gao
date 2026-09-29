@@ -5,7 +5,7 @@
     "subtitle": "A variational route through the spectral theorem, SVD, and low-rank approximation",
     "group": "Mathematics of machine learning",
     "date": "March 2025",
-    "summary": "Proves the real spectral theorem using compactness and Lagrange multipliers, then develops SVD, optimal low-rank approximation, and PCA—without invoking the Fundamental Theorem of Algebra.",
+    "summary": "A route to PCA that starts with geometry: compactness and Lagrange multipliers lead to the real spectral theorem, SVD, and optimal low-rank approximation.",
     "prerequisites": "Linear algebra, multivariable calculus, and basic proof techniques."
   },
   {
@@ -14,7 +14,7 @@
     "subtitle": "Stationarity, convex rates, and stochastic gradients",
     "group": "Mathematics of machine learning",
     "date": "March 2025",
-    "summary": "A proof-based account of standard convergence guarantees: smooth nonconvex objectives, convexity, strong convexity, and the effect of stochastic gradient noise.",
+    "summary": "What can gradient descent guarantee, and what changes when gradients are noisy? Proofs trace how smoothness and convexity determine convergence and its speed.",
     "prerequisites": "Multivariable calculus, linear algebra, and basic probability."
   },
   {
@@ -23,7 +23,7 @@
     "subtitle": "From Lloyd’s algorithm to graph Laplacians and random walks",
     "group": "Mathematics of machine learning",
     "date": "March 2025",
-    "summary": "Develops k-means and spectral clustering from an optimization viewpoint, with a proof of the symmetric-matrix Courant–Fischer theorem and a random-walk interpretation.",
+    "summary": "Why do eigenvectors help reveal clusters? An optimization view connects k-means to spectral clustering, with Courant–Fischer and random walks explaining the construction.",
     "prerequisites": "Linear algebra, eigenvalues, and basic optimization."
   },
   {
@@ -32,8 +32,17 @@
     "subtitle": "Lagrange multipliers, Cook’s distance, and Sherman–Morrison",
     "group": "Mathematics of machine learning",
     "date": "March 2025",
-    "summary": "Derives the Lagrange multiplier condition geometrically, connects constrained and penalized ridge regression, and uses Sherman–Morrison to derive Cook’s distance. Ends with autoregression.",
+    "summary": "How much can one observation change a regression fit? A geometric treatment of ridge regression leads to Cook’s distance through the Sherman–Morrison formula.",
     "prerequisites": "Linear algebra, multivariable calculus, and introductory statistics."
+  },
+  {
+    "slug": "reinforcement-learning",
+    "title": "Reinforcement Learning I",
+    "subtitle": "Optimal policies, Bellman operators, and dynamic programming",
+    "group": "Mathematics of machine learning",
+    "date": "September 2026",
+    "summary": "Why does an optimal policy exist, and how can we find it? A fixed-point argument for finite discounted Markov decision processes leads to value iteration and policy iteration.",
+    "prerequisites": "Basic probability, linear algebra, and familiarity with metric spaces."
   },
   {
     "slug": "martingales-diffusions",
@@ -41,7 +50,7 @@
     "subtitle": "Itô calculus, scale functions, and exit problems",
     "group": "Probability and stochastic processes",
     "date": "December 2025",
-    "summary": "Builds from conditional expectation to stochastic integration and diffusion generators, then connects scale functions, Green kernels, and boundary-value problems.",
+    "summary": "How can we describe when and where a diffusion leaves a region? Starting with conditional expectation and Itô calculus, these notes connect stochastic paths to boundary-value problems.",
     "prerequisites": "Introductory probability and calculus."
   },
   {
@@ -50,7 +59,7 @@
     "subtitle": "Risk-neutral pricing, delta, and American exercise",
     "group": "Mathematical finance",
     "date": "March 2026",
-    "summary": "Derives European call pricing through risk-neutral valuation and replication, then examines delta, early exercise, and a perpetual American put.",
+    "summary": "How can a trading strategy determine an option’s price? Replication and risk-neutral valuation lead to Black–Scholes, followed by delta hedging and the question of early exercise.",
     "prerequisites": "Brownian motion, Itô’s formula, and basic martingales."
   }
 ]

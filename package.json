@@ -7,7 +7,7 @@
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build"
   },
   "dependencies": {
-    "astro": "^5.13.0",
+    "astro": "^7.3.5",
     "mathjax-full": "^3.2.2"
   }
 }

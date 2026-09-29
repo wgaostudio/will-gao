@@ -1,6 +1,6 @@
 # Will Gao — personal website
 
-An Astro static site with Home, Writing, Notes, Research, Teaching, About, and six complete mathematical notes. The design follows the supplied warm paper, moss, and serif reference.
+An Astro static site with Home, Writing, Notes, Research, Teaching, About, and seven complete mathematical notes. The design follows the supplied warm paper, moss, and serif reference.
 
 ## Build
 
@@ -19,7 +19,7 @@ Set `SITE_URL` to the final public origin when building for your domain. It cont
 - Theme and responsive layouts: `src/styles.css`
 - Original photo: `public/portrait.jpg`
 
-Original note HTML is preserved in `sources/`. To re-import after editing those originals, run, in order:
+Original note HTML is preserved in `sources/`. The reinforcement-learning note is imported from its LaTeX source with `scripts/import-latex-note.py`, then rendered with `scripts/render-note-math.mjs`. To re-import the original six HTML notes after editing those originals, run, in order:
 
 1. `python scripts/import-notes.py`
 2. `node scripts/prepare-math.mjs`
@@ -29,7 +29,7 @@ Original note HTML is preserved in `sources/`. To re-import after editing those 
 6. `python scripts/unify-statements.py`
 7. `npm run build`
 
-Re-importing overwrites the processed note bodies and generated contents indexes. Edit either originals and re-import, or processed content directly; do not mix the two approaches without reconciling changes. The importer preserves existing editorial titles and descriptions in `src/data/notes.json`.
+Re-importing overwrites the processed note bodies and generated contents indexes. Edit either originals and re-import, or processed content directly; do not mix the two approaches without reconciling changes. The HTML importer preserves existing editorial titles and descriptions in `src/data/notes.json`.
 
 Math remains pre-rendered. Gradient descent includes build-time MathJax SVG and assistive MathML. Existing MathML is retained in the other source exports. Its native math layout must never be overridden with CSS `display: block`; overflow is handled by surrounding containers. The martingale source’s 83 plain-HTML expressions are transcribed and typeset with MathJax using `src/data/martingale-typesetting.json`. The PCA source supplied only SVG; its original vectors are preserved and given structured equation labels derived from MathJax's node tree. Original TeX would allow a stronger semantic MathML version of this note. Mathematical claims have not been independently audited.
 
@@ -41,7 +41,7 @@ Copy this project to the intended GitHub repository and enable GitHub Pages with
 
 ## Content decisions
 
-The Writing page includes the two complete essays supplied by the author, with original publication links and credits. Musical theater is the primary writing focus. Teaching lists the upcoming Autumn 2026 CSE 422 assistantship without a historical course link. About reflects the user-confirmed fourth-year BS/MS status, pure mathematics double major, June 2027–June 2028 job-search window, and Autumn 2028 return for the master’s year. Add the actual CV at `public/cv.pdf` and rebuild to activate the CV link. No unpublished research methods or internal Madrona operational details are included. Dates shown on notes come from the supplied material; the undated Substack essay has no invented publication date.
+The Writing page includes the two complete essays supplied by the author, with original publication links and credits. Musical theater is the primary writing focus. Teaching lists the current Autumn 2026 CSE 422 assistantship and links to the course website. About reflects the user-confirmed fourth-year BS/MS status, pure mathematics double major, June 2027–June 2028 job-search window, and Autumn 2028 return for the master’s year. Add the actual CV at `public/cv.pdf` and rebuild to activate the CV link. No unpublished research methods or internal Madrona operational details are included. Dates shown on notes come from the supplied material; the undated Substack essay has no invented publication date.
 
 ## Verification
 

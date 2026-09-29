@@ -1,7 +1,4 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import { withBase } from '../base.js';
+return Astro.redirect(withBase('/about/#teaching'), 301);
 ---
-<Layout title="Teaching assistantships" active="Teaching" description="Will Gao’s teaching assistantships. Upcoming: CSE 422, Advanced Toolkit for Modern Algorithms, Autumn 2026.">
-  <div class="page-intro"><h1>Teaching assistantships</h1></div>
-  <section class="assistantship"><p class="meta">Upcoming · Autumn 2026</p><h2>CSE 422: Advanced Toolkit for Modern Algorithms</h2></section>
-</Layout>
