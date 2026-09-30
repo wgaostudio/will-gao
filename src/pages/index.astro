@@ -1,22 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import NoteRow from '../components/NoteRow.astro';
+import CvLink from '../components/CvLink.astro';
 import notes from '../data/notes.json';
 import { withBase } from '../base.js';
+const featuredNotes = ['reinforcement-learning', 'gradient-descent', 'martingales-diffusions'].map(slug => notes.find(n => n.slug === slug));
 ---
-<Layout description="Will Gao’s projects, essays, and extended mathematical notes. From combinatorial optimization and probability toward empirical AI.">
+<Layout description="Will Gao is a fourth-year computer science and mathematics student at the University of Washington, formerly an applied scientist intern at Madrona Venture Group. Projects, research, essays, and extended mathematical notes.">
   <section class="home-intro" aria-labelledby="intro-title">
     <div class="home-intro-copy">
       <p class="eyebrow">Mathematics, computing &amp; theater</p>
       <h1 id="intro-title">Will Gao<span class="name-period">.</span></h1>
-      <p class="intro-lead">I study computer science and mathematics at the University of Washington.</p>
-      <p class="intro-detail">My interests were previously in combinatorial optimization and probability; I’m now shifting toward empirical AI. I also write about <a href={withBase('/writing/')}>musical theater</a>.</p>
-      <div class="intro-links"><a href={withBase('/about/')}>More about me <span aria-hidden="true">↗</span></a><a href="mailto:wgaostudio@gmail.com">Say hello <span aria-hidden="true">↗</span></a></div>
+      <p class="intro-lead">I’m a fourth-year in the University of Washington’s computer science BS/MS program, also majoring in pure mathematics.</p>
+      <p class="intro-detail">This summer I was an applied scientist intern at Madrona Venture Group, where I worked on large-scale data and ML problems and designed a founder-discovery model for the firm’s investors. My interests were previously in combinatorial optimization and probability; I’m now shifting toward empirical AI. I also write about <a href={withBase('/writing/')}>musical theater</a>.</p>
+      <p class="intro-detail">I’m looking for a model-focused machine learning engineering role at a startup, or a research residency, for June 2027–June 2028, before returning to UW for the master’s year.</p>
+      <div class="intro-links"><CvLink/><a href="mailto:wgaostudio@gmail.com">Say hello <span aria-hidden="true">↗</span></a></div>
     </div>
-    <aside class="intro-margin" aria-label="Portrait and current work">
-      <img class="portrait" src={withBase('/portrait.jpg')} alt="Will Gao at the University of Washington" width="160" height="213" fetchpriority="high"/>
-      <div class="current-note"><h2>Currently</h2><p>Teaching assistant for <a href={withBase('/about/#teaching')}>Advanced Toolkit for Modern Algorithms</a> at UW.<br/><span>Autumn 2026</span></p></div>
-    </aside>
+    <aside class="intro-margin"><img class="portrait" src={withBase('/portrait.jpg')} alt="Will Gao at the University of Washington" width="160" height="213" fetchpriority="high"/></aside>
   </section>
   <section class="selected-projects" aria-labelledby="projects">
     <div class="section-heading"><h2 id="projects"><span class="section-number" aria-hidden="true">01</span> Selected projects</h2></div>
@@ -51,9 +51,14 @@ import { withBase } from '../base.js';
       </div>
     </article>
   </section>
+  <section aria-labelledby="research">
+    <div class="section-heading"><h2 id="research"><span class="section-number" aria-hidden="true">02</span> Research &amp; teaching</h2></div>
+    <article class="note-row"><div class="meta">Ongoing<br/>Not yet published</div><div><h3>Ising formulations for combinatorial optimization</h3><p>Ising formulations for the traveling salesperson problem and related graph optimization problems. Mentored by Prof. Jerry Li (UW), collaborating with Medha Mittal (UW) and Devrath Iyer (Stanford), with guidance from Prof. Sara Achour (Stanford).</p></div></article>
+    <article class="note-row" id="teaching"><div class="meta">Autumn 2026<br/>Teaching assistant</div><div><h3><a href="https://courses.cs.washington.edu/courses/cse422/26au/cse422au26.html">CSE 422: Advanced Toolkit for Modern Algorithms</a></h3><p>University of Washington.</p></div></article>
+  </section>
   <section aria-labelledby="writing">
-    <div class="section-heading"><h2 id="writing"><span class="section-number" aria-hidden="true">02</span> Writing</h2><a href={withBase('/writing/')}>All writing</a></div>
+    <div class="section-heading"><h2 id="writing"><span class="section-number" aria-hidden="true">03</span> Writing</h2><a href={withBase('/writing/')}>All writing</a></div>
     <article class="feature"><div class="meta">Musical theater</div><div><h3><a href={withBase('/writing/if-i-believe-in-you-this-much/')}>If I Believe in You This Much</a></h3><p>The watch, the timer, and the limits of love in <em>The Last Five Years</em>.</p><a class="text-link" href={withBase('/writing/if-i-believe-in-you-this-much/')}>Read the essay</a></div></article>
   </section>
-  <section aria-labelledby="notes"><div class="section-heading"><h2 id="notes"><span class="section-number" aria-hidden="true">03</span> Extended lecture notes</h2><a href={withBase('/notes/')}>All seven notes</a></div><p class="collection-intro">I sometimes expand lecture notes into a more systematic treatment, filling in proofs and connecting ideas. Here are a few of those notes.</p><NoteRow note={notes[0]}/><NoteRow note={notes[2]}/><NoteRow note={notes[4]}/></section>
+  <section aria-labelledby="notes"><div class="section-heading"><h2 id="notes"><span class="section-number" aria-hidden="true">04</span> Extended lecture notes</h2><a href={withBase('/notes/')}>All {notes.length} notes</a></div><p class="collection-intro">I sometimes expand lecture notes into a more systematic treatment, filling in proofs and connecting ideas. Here are a few of those notes.</p>{featuredNotes.map(note => <NoteRow note={note}/>)}</section>
 </Layout>
